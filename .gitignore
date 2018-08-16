@@ -1,0 +1,109 @@
+### Intellij ###
+# Covers JetBrains IDEs: IntelliJ
+
+*.iml
+
+## Directory-based project format:
+.idea/
+# if you remove the above rule, at least ignore the following:
+
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+
+# Sensitive or high-churn files:
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+# Gradle:
+.gradle/
+.idea/gradle.xml
+.idea/libraries
+
+## File-based project format:
+*.ipr
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+build/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+
+
+### Java ###
+*.class
+
+# Package Files #
+*.jar
+
+
+### Circuit ###
+# backup files
+*.bak
+
+# postscript vector image files
+*.ps
+
+# pcb module archives and other zip archives
+.zip
+
+
+### Information ###
+.~lock.help.odt#
+
+
+### Firmware side ignore files ###
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+.dep/
+
+# Other generated files
+*.eep
+*.lss
+*.lst
+*.map
+*.sym
+
+
