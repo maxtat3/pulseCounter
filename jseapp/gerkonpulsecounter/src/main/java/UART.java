@@ -86,6 +86,31 @@ public class UART {
 	}
 
 
+	/**
+	 * Thread pending response some time from device when request command {@link Const#REQUEST_INIT_DEVICE} is sent.
+	 * The waiting time is determined {@link DevicePendingResponseTimer#PENDING_RESPONSE_TIME_MS} .
+	 * If in this time device is not response or response does not match
+	 * from {@link Const#RESPONSE_INIT_DEVICE} command - continue scanning next COM ports.
+	 *
+	 * This thread intended for wait only if not any response from COM port (not call {@link #tryInitDeviceResponse}) !
+	 */
+	private class DevicePendingResponseTimer extends Thread {
+		private static final int PENDING_RESPONSE_TIME_MS = 500;
+
+		@Override
+		public void run() {
+			log("C DevicePendingResponseTimer#run");
+			try {
+				Thread.sleep(PENDING_RESPONSE_TIME_MS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			if (!isDeviceFound) {
+				log("C DevicePendingResponseTimer->call #autoConnect ");
+				autoConnect();
+			}
+		}
+	}
 
 	/**
 	 * Автоподключение к ком порту устройства.
@@ -101,7 +126,10 @@ public class UART {
 			portName = Const.COM_PORTS[portIndex];
 			if (uartInit(portName)) {	// if port is open
 
-				// задержка нужна после инин. порта и перед отправкой байта в этот открытый порт
+				// Задержка нужна после иниц. порта и перед отправкой Байта в этот открытый порт.
+				// Важно. Для обнаружения устройств на основе arduino для открытия порта задержка должна быть 1000...2000 ms.
+				// Если задержка меньше, arduino не успевает отреагировать и не отправляет ответ.
+				// Проверено на arduino nano, uno.
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -120,6 +148,9 @@ public class UART {
 	 */
 	private void tryInitDeviceRequest() {
 		log("#tryInitDeviceRequest");
+
+		DevicePendingResponseTimer pendingRespTimer = new DevicePendingResponseTimer();
+		pendingRespTimer.start();
 
 		try {
 			serialPort.writeByte(Const.REQUEST_INIT_DEVICE);
@@ -149,8 +180,6 @@ public class UART {
 			isDeviceFound = true;
 			callbackUART.deviceConnected(portIndex, portName);
 			log("\tisDeviceFound = " + isDeviceFound);
-		} else {
-			autoConnect();
 		}
 	}
 
