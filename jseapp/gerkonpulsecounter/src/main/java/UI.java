@@ -102,12 +102,10 @@ public class UI implements UART.CallbackToUI {
 				String portName = jcmboxComPort.getSelectedItem().toString();
 				if (uart.getSerialPort() != null && uart.getSerialPort().isOpened()) {
 					try {
+						System.out.println("\tClose " + uart.getSerialPort().getPortName() + " port");
 						uart.getSerialPort().closePort();
 						if (uart.uartInit(portName)) {
-//							uart.attemptConnectToDevice();
-						} else {
-							System.out.println("\t 0");
-							Const.msgPortClosed(portName); // TODO: 07.08.18 when device not fount - call 0
+							uart.tryInitDeviceRequest();
 						}
 					} catch (SerialPortException e1) {
 						e1.printStackTrace();

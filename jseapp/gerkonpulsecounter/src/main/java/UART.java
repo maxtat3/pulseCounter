@@ -125,17 +125,6 @@ public class UART {
 		for (; portIndex < Const.COM_PORTS.length; portIndex++) {
 			portName = Const.COM_PORTS[portIndex];
 			if (uartInit(portName)) {	// if port is open
-
-				// Задержка нужна после иниц. порта и перед отправкой Байта в этот открытый порт.
-				// Важно. Для обнаружения устройств на основе arduino для открытия порта задержка должна быть 1000...2000 ms.
-				// Если задержка меньше, arduino не успевает отреагировать и не отправляет ответ.
-				// Проверено на arduino nano, uno.
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
 				tryInitDeviceRequest();
 				break;
 			}
@@ -146,8 +135,18 @@ public class UART {
 	 * Выполнение попытки нахождения устройства.
 	 * Запрос к устройству.
 	 */
-	private void tryInitDeviceRequest() {
+	public void tryInitDeviceRequest() {
 		log("#tryInitDeviceRequest");
+
+		// Задержка нужна после иниц. порта и перед отправкой Байта в этот открытый порт.
+		// Важно. Для обнаружения устройств на основе arduino для открытия порта задержка должна быть 1000...2000 ms.
+		// Если задержка меньше, arduino не успевает отреагировать и не отправляет ответ.
+		// Проверено на arduino nano, uno.
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		DevicePendingResponseTimer pendingRespTimer = new DevicePendingResponseTimer();
 		pendingRespTimer.start();
@@ -260,6 +259,6 @@ public class UART {
 	}
 
 	private static void log(String str) {
-		if (isLog) System.out.println(str);
+		if (isLog) System.out.println("UART:\t" + str);
 	}
 }
