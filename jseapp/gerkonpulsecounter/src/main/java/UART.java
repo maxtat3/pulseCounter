@@ -80,7 +80,7 @@ public class UART {
 		catch (SerialPortException ex) {
 //			log(ex);
 //			JOptionPane.showMessageDialog(null, "Port is close !", "Warning", JOptionPane.WARNING_MESSAGE);
-			System.out.print("\tport " + portName + " close" + "\n");
+			log("\tport " + portName + " close" + "\n");
 		}
 		return false;
 	}

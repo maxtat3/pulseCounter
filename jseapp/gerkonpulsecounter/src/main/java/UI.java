@@ -8,6 +8,8 @@ import java.awt.event.ItemListener;
 
 public class UI implements UART.CallbackToUI {
 
+	private static final boolean isLog = true;
+
 	private JTextField jtfPulseCounter;
 	private JButton jbtnReset = null;
 	private JComboBox jcmboxComPort;
@@ -86,7 +88,7 @@ public class UI implements UART.CallbackToUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (Const.dialogConfirm()) {
-					System.out.println("Yes answer");
+					log("Yes answer");
 					pulseCounter = 0;    // TODO: 06.08.18 added confirm dialog
 					jtfPulseCounter.setText(String.valueOf(pulseCounter));
 				}
@@ -98,11 +100,11 @@ public class UI implements UART.CallbackToUI {
 		jcmboxComPort.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				System.out.println("jcmboxComPort#itemStateChanged");
+				log("jcmboxComPort#itemStateChanged");
 				String portName = jcmboxComPort.getSelectedItem().toString();
 				if (uart.getSerialPort() != null && uart.getSerialPort().isOpened()) {
 					try {
-						System.out.println("\tClose " + uart.getSerialPort().getPortName() + " port");
+						log("\tClose " + uart.getSerialPort().getPortName() + " port");
 						uart.getSerialPort().closePort();
 						if (uart.uartInit(portName)) {
 							uart.tryInitDeviceRequest();
@@ -112,7 +114,7 @@ public class UI implements UART.CallbackToUI {
 					}
 				} else {
 					if (!uart.uartInit(portName) ) {
-						System.out.println("\t 1");
+						log("\t 1");
 						Const.msgPortClosed(portName); // TODO: 07.08.18 when device not fount - call 1
 					}
 				}
@@ -125,7 +127,7 @@ public class UI implements UART.CallbackToUI {
 
 	@Override
 	public void incrementCounter() {
-		System.out.println("@incrementCounter");
+		log("@incrementCounter");
 		pulseCounter++;
 		jtfPulseCounter.setText(String.valueOf(pulseCounter));
 	}
@@ -135,4 +137,8 @@ public class UI implements UART.CallbackToUI {
 		jcmboxComPort.setSelectedItem(name);
 	}
 
+
+	private static void log(String str) {
+		if (isLog) System.out.println("UI:\t" + str);
+	}
 }
